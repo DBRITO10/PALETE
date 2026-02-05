@@ -3,74 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculador de Armazenagem - Paletes</title>
+    <title>Portal Logístico - Manual de Operação</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
-        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background-color: #2980b9; }
-        .result { margin-top: 20px; padding: 15px; border-radius: 6px; display: none; }
-        .success { background-color: #e8f6f3; border-left: 5px solid #27ae60; display: block; }
-        .info-palete { font-size: 0.85em; color: #7f8c8d; margin-bottom: 15px; text-align: center; }
+        :root {
+            --azul-escuro: #2c3e50;
+            --azul-claro: #3498db;
+            --cinza-fundo: #f4f7f6;
+            --verde: #27ae60;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--cinza-fundo); margin: 0; display: flex; }
+        
+        /* Sidebar lateral */
+        .sidebar { width: 250px; background: var(--azul-escuro); color: white; height: 100vh; position: fixed; padding: 20px; }
+        .sidebar h2 { font-size: 1.2em; border-bottom: 1px solid #7f8c8d; padding-bottom: 10px; }
+        .sidebar nav a { display: block; color: #bdc3c7; text-decoration: none; padding: 12px 0; border-bottom: 1px solid #34495e; cursor: pointer; }
+        .sidebar nav a:hover { color: white; }
+
+        /* Conteúdo Principal */
+        .main-content { margin-left: 290px; padding: 40px; width: 100%; }
+        .section { display: none; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .active { display: block; }
+
+        h1 { color: var(--azul-escuro); margin-top: 0; }
+        .step { background: #eef2f3; padding: 15px; border-left: 5px solid var(--azul-claro); margin-bottom: 10px; border-radius: 4px; }
+        
+        /* Dashboard Cards */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, min-minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card h3 { margin: 0; color: #7f8c8d; font-size: 0.9em; }
+        .card p { font-size: 1.8em; font-weight: bold; margin: 10px 0; color: var(--azul-claro); }
+
+        .chart-container { width: 100%; max-width: 600px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Cálculo de Paletes</h2>
-    <p class="info-palete">Baseado no padrão PBR (120cm x 100cm)</p>
+<div class="sidebar">
+    <h2>Logística Recebimento</h2>
+    <nav>
+        <a onclick="showSection('dashboard')">📊 Dashboard Resumo</a>
+        <a onclick="showSection('processo1')">🚛 Processo de Descarga</a>
+        <a onclick="showSection('processo2')">📦 Conferência Cega</a>
+        <a onclick="showSection('processo3')">⚠️ Tratativa de Avarias</a>
+    </nav>
+</div>
 
-    <div class="input-group">
-        <label>Quantidade Total de Caixas/Produtos</label>
-        <input type="number" id="qtdTotal" placeholder="Ex: 500">
+<div class="main-content">
+    
+    <div id="dashboard" class="section active">
+        <h1>Dashboard de Performance (Exemplo)</h1>
+        <div class="dashboard-grid">
+            <div class="card"><h3>Veículos Recebidos</h3><p>12</p></div>
+            <div class="card"><h3>Produtividade (Palet/h)</h3><p>18</p></div>
+            <div class="card"><h3>Avarias Detectadas</h3><p>02</p></div>
+            <div class="card"><h3>Tempo Médio Descarga</h3><p>45 min</p></div>
+        </div>
+        <div class="chart-container">
+            <canvas id="meuGrafico"></canvas>
+        </div>
     </div>
 
-    <div class="input-group">
-        <label>Quantas caixas cabem por camada?</label>
-        <input type="number" id="lastro" placeholder="Ex: 10">
+    <div id="processo1" class="section">
+        <h1>Processo de Descarga de Veículos</h1>
+        <div class="step">
+            <strong>1. Conferência de Documentos:</strong> Solicitar o agendamento e a NF. Verificar se o CNPJ de destino está correto.
+        </div>
+        <div class="step">
+            <strong>2. Inspeção do Veículo:</strong> Verificar se o baú está lacrado e se não há sinais de umidade ou furos.
+        </div>
+        <div class="step">
+            <strong>3. Posicionamento:</strong> Orientar o motorista para a doca correta conforme o tipo de produto (Móveis vs Eletro).
+        </div>
+        
     </div>
 
-    <div class="input-group">
-        <label>Quantas camadas (altura)?</label>
-        <input type="number" id="camadas" placeholder="Ex: 5">
+    <div id="processo2" class="section">
+        <h1>Conferência Cega</h1>
+        <p>A conferência deve ser feita sem que o auxiliar veja a quantidade na Nota Fiscal para evitar vícios.</p>
+        <div class="step">Utilizar o coletor de dados para bipar o EAN de cada caixa.</div>
+        <div class="step">Paletizar seguindo o padrão de lastro e altura definido no sistema.</div>
     </div>
 
-    <button onclick="calcular()">Calcular Necessidade</button>
-
-    <div id="resultado" class="result">
-        <p id="resTexto"></p>
+    <div id="processo3" class="section">
+        <h1>Fluxo de Avarias</h1>
+        <p>Caso encontre uma caixa amassada ou molhada:</p>
+        <div class="step">1. Fotografar a avaria ainda dentro do caminhão.</div>
+        <div class="step">2. Segregar em palete identificado com fita zebrada.</div>
+        <div class="step">3. Notificar o setor de compras/fornecedor via relatório.</div>
     </div>
+
 </div>
 
 <script>
-    function calcular() {
-        const qtdTotal = parseFloat(document.getElementById('qtdTotal').value);
-        const lastro = parseFloat(document.getElementById('lastro').value);
-        const camadas = parseFloat(document.getElementById('camadas').value);
-        const resDiv = document.getElementById('resultado');
-        const resTexto = document.getElementById('resTexto');
-
-        if (!qtdTotal || !lastro || !camadas) {
-            alert("Por favor, preencha todos os campos.");
-            return;
-        }
-
-        // Capacidade de 1 palete = caixas por camada * número de camadas
-        const capacidadePorPalete = lastro * camadas;
-        
-        // Quantidade de paletes = Total / Capacidade de 1 palete
-        const qtdPaletes = Math.ceil(qtdTotal / capacidadePorPalete);
-
-        resDiv.classList.add('success');
-        resTexto.innerHTML = `
-            <strong>Capacidade por Palete:</strong> ${capacidadePorPalete} unidades<br>
-            <strong>Total de Paletes Necessários:</strong> <span style="font-size: 20px; color: #27ae60;">${qtdPaletes}</span>
-        `;
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
     }
+
+    // Gráfico de Exemplo
+    const ctx = document.getElementById('meuGrafico').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
+            datasets: [{
+                label: 'Cargas Recebidas',
+                data: [10, 15, 8, 12, 14],
+                backgroundColor: '#3498db'
+            }]
+        },
+        options: { responsive: true }
+    });
 </script>
 
 </body>
