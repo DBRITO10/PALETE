@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculador de Armazenagem - Paletes</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background-color: #2980b9; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 6px; display: none; }
+        .success { background-color: #e8f6f3; border-left: 5px solid #27ae60; display: block; }
+        .info-palete { font-size: 0.85em; color: #7f8c8d; margin-bottom: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Cálculo de Paletes</h2>
+    <p class="info-palete">Baseado no padrão PBR (120cm x 100cm)</p>
+
+    <div class="input-group">
+        <label>Quantidade Total de Caixas/Produtos</label>
+        <input type="number" id="qtdTotal" placeholder="Ex: 500">
+    </div>
+
+    <div class="input-group">
+        <label>Quantas caixas cabem por camada?</label>
+        <input type="number" id="lastro" placeholder="Ex: 10">
+    </div>
+
+    <div class="input-group">
+        <label>Quantas camadas (altura)?</label>
+        <input type="number" id="camadas" placeholder="Ex: 5">
+    </div>
+
+    <button onclick="calcular()">Calcular Necessidade</button>
+
+    <div id="resultado" class="result">
+        <p id="resTexto"></p>
+    </div>
+</div>
+
+<script>
+    function calcular() {
+        const qtdTotal = parseFloat(document.getElementById('qtdTotal').value);
+        const lastro = parseFloat(document.getElementById('lastro').value);
+        const camadas = parseFloat(document.getElementById('camadas').value);
+        const resDiv = document.getElementById('resultado');
+        const resTexto = document.getElementById('resTexto');
+
+        if (!qtdTotal || !lastro || !camadas) {
+            alert("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        // Capacidade de 1 palete = caixas por camada * número de camadas
+        const capacidadePorPalete = lastro * camadas;
+        
+        // Quantidade de paletes = Total / Capacidade de 1 palete
+        const qtdPaletes = Math.ceil(qtdTotal / capacidadePorPalete);
+
+        resDiv.classList.add('success');
+        resTexto.innerHTML = `
+            <strong>Capacidade por Palete:</strong> ${capacidadePorPalete} unidades<br>
+            <strong>Total de Paletes Necessários:</strong> <span style="font-size: 20px; color: #27ae60;">${qtdPaletes}</span>
+        `;
+    }
+</script>
+
+</body>
+</html>
